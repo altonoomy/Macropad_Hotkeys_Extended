@@ -23,7 +23,7 @@ For browser tab switching, ensure that you name your macros according to the fol
 
 (The full name, e.g. 'Mozilla Firefox' or 'Google Chrome', is not necessary, as it would not fit on the display.) 
 
-Default macros are recommended in case no application macro is available. The "desktop" default should be named to whatever the application name is while on your desktop (refer to `getWindow.py`). For browser default, simply name to `Browser/Default`. 
+Default macros are recommended in case no application macro is available. The "desktop" default should be named to whatever the application name is while on your desktop (refer to `getWindow.py`). For browser default, simply name to `Browser/Default` e.g. `Firefox/Default`. 
 
 # Configuration
 Due to the arbitrary nature of website titles, it is difficult to predict how tab names will be displayed. Currently, the program looks for any dashes seperated by spaces to differentiate between the website name and any additional information the designer chose to include. The program may be changed to include different seperators, but for most sites, seperating by dash is sufficient. If a tab name is 'Subscriptions - Youtube', 'YouTube' will be what the program looks for and switches to. 
