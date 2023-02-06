@@ -38,11 +38,11 @@ def getPort():
     while True:
         print("Looking for data port...")
         if adafruit_board_toolkit.circuitpython_serial.data_comports():
-            print("Ports found!")
+            print("Port found!")
             # sleep to allow time for connection to be made
             time.sleep(0.1)
             for port in adafruit_board_toolkit.circuitpython_serial.data_comports():
-                return port.device
+                return port
         else:
             print("No port found.")
             time.sleep(1)
@@ -53,16 +53,21 @@ def getChannel(port):
     channel.timeout = 0.03 # originally 0.05
     return channel
                                
-def startWindowWatch():           
-    channelPort = getPort()
-    channel = getChannel(channelPort)
-    while True:
-        windowComponents = getCurrentWindow()
-        print(f"App: {windowComponents['application']} | Tab: {windowComponents['applicationFocus']}")
-        # Send data to the serial port
-        channel.write(json.dumps(windowComponents).encode())
-        channel.write(b"\r\n")
-        #channel.close()
+def startWindowWatch():
+    while True:           
+        channelPort = getPort()
+        channel = getChannel(channelPort.device)
+        while True:
+            windowComponents = getCurrentWindow()
+            print(f"App: {windowComponents['application']} | Tab: {windowComponents['applicationFocus']}")
+            # Send data to the serial port
+            try:
+                channel.write(json.dumps(windowComponents).encode())
+                channel.write(b"\r\n")
+            except serial.serialutil.SerialException:
+                break
+        print(f"{channelPort.product} disconnected.")
+            #channel.close()
 
 if __name__ == "__main__":
     startWindowWatch()
