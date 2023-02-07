@@ -1,5 +1,5 @@
 # Macropad_Hotkeys_Extended
-An extension of Adafruit Macropad_Hotkeys for the Macropad RP2040.
+An extension of Adafruit Macropad_Hotkeys for the Macropad RP2040. Thanks to Adafruit for providing the original project code. It can be found [here](https://learn.adafruit.com/macropad-hotkeys/project-code).
 
 # Additions
 - Automatic macro switching. Macros now switch depending on the window focus. 
