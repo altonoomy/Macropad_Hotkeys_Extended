@@ -39,7 +39,7 @@ def splitStringByHyphen(s):
 MACRO_FOLDER = '/macros'
 
 # Potential applications
-browsers = ['Firefox', 'Chrome', 'Brave', 'Edge', 'Opera', 'Safari', 'Vivaldi', 'Pale Moon', 'Orion']
+browsers = ['Firefox', 'Chrome', 'Brave', 'Edge', 'Opera', 'Safari', 'Vivaldi', 'Pale Moon', 'Orion', 'Chromium']
 websites = ['YouTube', 'Twitch']
 
 # CLASSES AND FUNCTIONS ----------------
@@ -136,8 +136,6 @@ time_sleep_interval = 0.15
 while True:
     # Init switching variables
     browser = False
-    default_focus = False
-    default_app = True
     # Read the current application in use to change macros on the fly
     if serial.in_waiting > 0:
         data_in = serial.readline()
@@ -150,6 +148,7 @@ while True:
         if isinstance(data, dict):
             if data.get("application") is not None:
                 window_program = data["application"]
+                # Check if program is a browser for faster switching
                 for b in browsers:
                     if window_program.endswith(b):
                         browser = True
@@ -162,9 +161,12 @@ while True:
                 window_program_focus = splitStringByHyphen(window_program_focus)
             else:
                 window_program_focus = None
+            # If macro_locked, no macros will be switched until deactivated
             if not macro_locked:
-                if window_program and current_macro[0] != window_program and not browser:
+                # If program is running and detected, and we haven't switched to that program macro
+                if not browser and window_program and current_macro[0] != window_program:
                     for app in apps:
+                        # If we have a corresponding macro for the app, switch to it
                         if window_program in app.name:
                             app_index = app_names.index(app.name)
                             apps[app_index].switch()
@@ -172,26 +174,39 @@ while True:
                             current_macro = app.name.split('/')
                             break
                     else:
+                        # If we don't have corresponding macro, go to default macro i.e. first macro in macro/ directory
+                        # also don't switch if we are already in default
                         if app_index != 0:
                             app_index = 0
                             apps[app_index].switch()
                             time.sleep(time_sleep_interval)
                             current_macro = apps[0].name.split('/')
-                elif browser and (current_macro[0] != window_program or current_macro[-1] != window_program_focus):
+                # If program is a browser, and current macro isn't already switched to, detect for tab changes
+                if browser and (current_macro[0] != window_program or current_macro[-1] != window_program_focus):
+                    # Some browsers like FF leave home page tab as None, others as New tab
+                    # Check tab name, if it changed...
                     if window_program_focus is not None and current_macro[-1] != window_program_focus[-1]:
                         for app in apps:
+                            # Check if tab name has corresponding macro. If so, switch.
                             if window_program_focus[-1] in app.name:
                                 app_index = app_names.index(app.name)
                                 apps[app_index].switch()
                                 time.sleep(time_sleep_interval)
                                 current_macro = app.name.split('/')
                                 break
+                        # If no corresponding macro, switch to default
                         else:
                             if app_index != app_names.index(window_program + "/Default"):
                                 app_index = app_names.index(window_program + "/Default")
                                 apps[app_index].switch()
                                 time.sleep(time_sleep_interval)
                                 current_macro = apps[app_index].name.split('/')
+                    # In case of tab name being None, switch to default
+                    elif window_program_focus is None and current_macro[-1] != "Default":
+                        app_index = app_names.index(window_program + "/Default")
+                        apps[app_index].switch()
+                        time.sleep(time_sleep_interval)
+                        current_macro = apps[app_index].name.split('/')
     # Read encoder position. If it's changed, switch apps.
     position = macropad.encoder
     if macropad.encoder != last_position and macropad.encoder > last_position:
