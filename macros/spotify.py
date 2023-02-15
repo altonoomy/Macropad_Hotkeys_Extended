@@ -13,7 +13,7 @@ app = {                    # REQUIRED dict, must be named 'app'
         (0x000000, 'Mute', [[ConsumerControlCode.MUTE]]),
         # 2nd row ----------
         (0x000000, 'Prev', [[ConsumerControlCode.SCAN_PREVIOUS_TRACK]]),
-        (0x000000, 'Play/Pause', [Keycode.SPACE]),
+        (0x000000, 'Play/Pause', [ConsumerControlCode.PLAY_PAUSE]),
         (0x000000, 'Next', [[ConsumerControlCode.SCAN_NEXT_TRACK]]),
         # 3rd row ----------
         (0x000000, 'Repeat', [Keycode.CONTROL, 'r']),

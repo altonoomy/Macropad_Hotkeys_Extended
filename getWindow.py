@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import subprocess
 import time
 import io
@@ -54,12 +56,15 @@ def getChannel(port):
     return channel
                                
 def startWindowWatch():
+    currentApp = None
     while True:           
         channelPort = getPort()
         channel = getChannel(channelPort.device)
         while True:
             windowComponents = getCurrentWindow()
-            print(f"App: {windowComponents['application']} | Tab: {windowComponents['applicationFocus']}")
+            if windowComponents['application'] != currentApp:
+                print(f"App: {windowComponents['application']} | Tab: {windowComponents['applicationFocus']}")
+                currentApp = windowComponents['application']
             # Send data to the serial port
             try:
                 channel.write(json.dumps(windowComponents).encode())

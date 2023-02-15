@@ -20,7 +20,7 @@ app = {                    # REQUIRED dict, must be named 'app'
         (0x000000, 'Mute', ['m']),
         (0xbf2dff, 'Tab->', [Keycode.CONTROL, Keycode.TAB]),
         # 4th row ----------
-        (0xbf2dff, 'SS', [Keycode.CONTROL, Keycode.SHIFT, 's']),   # ctrl+s
+        (0xbf2dff, 'Enter', [Keycode.ENTER]),   # ctrl+s
         (0x000000, 'Copy', [Keycode.CONTROL,'c']),   # ctrl+c
         (0xbf2dff, 'Paste', [Keycode.CONTROL, 'v']),  # ctrl+v
         # Encoder button ---
